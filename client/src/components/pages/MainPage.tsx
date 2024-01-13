@@ -1,28 +1,30 @@
-import { Carousel, Typography } from '@mui/material';
-import ExampleCarouselImage from 'components/ExampleCarouselImage';
+import { Carousel } from 'react-bootstrap';
+
 export default function MainPage() {
   return (
     <Carousel>
       <Carousel.Item>
-        <ExampleCarouselImage text="First slide" />
+        <img
+          className="d-block w-100"
+          src="https://via.placeholder.com/800x400/000000"
+          alt="Первый слайд"
+        />
         <Carousel.Caption>
-          <Typography variant="h3">First slide label</Typography>
-          <Typography variant="body1">Nulla vitae elit libero, a pharetra augue mollis interdum.</Typography>
+          <h3>Надпись первого слайда</h3>
+          <p>Некоторый текст о первом слайде.</p>
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
-        <ExampleCarouselImage text="Second slide" />
+        <img
+          className="d-block w-100"
+          src="https://via.placeholder.com/800x400/000000"
+          alt="Второй слайд"
+        />
         <Carousel.Caption>
-          <Typography variant="h3">Second slide label</Typography>
-          <Typography variant="body1">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Typography>
+          <h3>Надпись второго слайда</h3>
+          <p>Некоторый текст о втором слайде.</p>
         </Carousel.Caption>
       </Carousel.Item>
-      <Carousel.Item>
-        <ExampleCarouselImage text="Third slide" />
-        <Carousel.Caption>
-          <Typography variant="h3">Third slide label</Typography>
-          <Typography variant="body1">Praesent commodo cursus magna, vel scelerisque nisl consectetur.</Typography>
-        </Carousel.Caption>
-      </Carousel.Item>
-    </Carousel>)
+    </Carousel>
+  );
 }

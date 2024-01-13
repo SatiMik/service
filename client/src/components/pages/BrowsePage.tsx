@@ -94,7 +94,7 @@ const RightPanel: React.FC<{ selectedNode: Parent | null }> = ({ selectedNode })
       {selectedNode && (
         <>
           <h2 style={{ marginBottom: '10px' }}>Дочерние элементы:</h2>
-        
+
           <TextField
             id="outlined-basic"
             label="Outlined"
