@@ -1,0 +1,29 @@
+.tree {
+    padding-left: 20px;
+}
+
+.treeItem {
+    margin-bottom: 5px;
+}
+
+.itemHeader {
+    cursor: pointer;
+}
+
+.arrow {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid #333; 
+    margin-right: 5px;
+}
+
+.collapsed {
+    transform: rotate(-90deg);
+}
+
+.children {
+    padding-left: 20px;
+}
