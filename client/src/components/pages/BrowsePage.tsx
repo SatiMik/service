@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 interface Child {
@@ -73,61 +73,110 @@ const TreeView: React.FC<{ data: Parent[]; onSelect: (node: Parent) => void }> =
 const RightPanel: React.FC<{ selectedNode: Parent | null }> = ({ selectedNode }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortedChildren, setSortedChildren] = useState<Child[]>([]);
+  const [sortMethod, setSortMethod] = useState<string>("alphabetical");
+
+  const sortAlphabetically = (children: Child[]) => {
+    return [...children].sort((a, b) => a.name.localeCompare(b.name));
+  };
+
+  const sortByLength = (children: Child[]) => {
+    return [...children].sort((a, b) => a.name.length - b.name.length);
+  };
+
+  const sortReverseAlphabetically = (children: Child[]) => {
+    return [...children].sort((a, b) => b.name.localeCompare(a.name));
+  };
+
   useEffect(() => {
     if (selectedNode) {
       const childrenToDisplay = selectedNode.children || [];
       const filteredChildren = childrenToDisplay.filter((child) =>
         child.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
-      setSortedChildren([...filteredChildren].sort((a, b) => a.name.localeCompare(b.name)));
+
+      let sorted;
+
+      switch (sortMethod) {
+        case "alphabetical":
+          sorted = sortAlphabetically(filteredChildren);
+          break;
+        case "length":
+          sorted = sortByLength(filteredChildren);
+          break;
+        case "reverseAlphabetical":
+          sorted = sortReverseAlphabetically(filteredChildren);
+          break;
+        default:
+          sorted = filteredChildren;
+      }
+
+      setSortedChildren(sorted);
     } else {
       setSortedChildren([]);
     }
-  }, [selectedNode, searchTerm]);
+  }, [selectedNode, searchTerm, sortMethod]);
 
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
+
+  const handleSortChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSortMethod(event.target.value as string);
+  };
+
   return (
-    <div style={{ marginLeft: '100px', fontSize: '20px' }}>
+    <div style={{ marginLeft: '100px', fontSize: '20px', display: 'flex' }}>
       {selectedNode && (
         <>
-          <h2 style={{ marginBottom: '10px' }}>Дочерние элементы:</h2>
-
-          <TextField
-            id="outlined-basic"
-            label="Outlined"
-            variant="outlined"
-            type="text"
-            placeholder="Поиск по имени"
-            value={searchTerm}
-            onChange={handleSearch}
-            style={{
-              position: 'fixed',
-              // top: '20px',
-              // left: '20px',
-              width: '200px',
-              color: 'white',
-              '& .MuiOutlinedInput-root': {
-                borderColor: 'white',
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: 'white',
-              },
-            }}
-          />
-
-          <ul style={{ listStyle: 'none', padding: '0', marginTop: '100px' }}>
-            {sortedChildren.map((child) => (
-              <li key={child.key} style={{ marginBottom: '5px' }}>{child.name}</li>
-            ))}
-          </ul>
+          <div style={{ marginTop: '10px', marginBottom: '10px', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <InputLabel id="sort-label">Сортировать по:</InputLabel>
+              <Select
+                labelId="sort-label"
+                id="sort-select"
+                value={sortMethod}
+                onChange={handleSortChange}
+                style={{ color: 'white', marginLeft: '10px' }}
+              >
+                <MenuItem value="alphabetical">Алфавиту</MenuItem>
+                <MenuItem value="length">Количеству символов</MenuItem>
+                <MenuItem value="reverseAlphabetical">Обратному алфавиту</MenuItem>
+              </Select>
+              <TextField
+                id="outlined-basic"
+                label="Поиск"
+                variant="outlined"
+                type="text"
+                placeholder="Поиск по имени"
+                value={searchTerm}
+                onChange={handleSearch}
+                style={{
+                  marginLeft: '10px',
+                  width: '200px',
+                  color: 'white',
+                  '& .MuiOutlinedInput-root': {
+                    borderColor: 'white',
+                  },
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'white',
+                  },
+                }}
+              />
+            </div>
+            <ul style={{ listStyle: 'none', padding: '0', marginTop: '20px' }}>
+              {sortedChildren.map((child) => (
+                <li key={child.key} style={{ marginBottom: '5px' }}>{child.name}</li>
+              ))}
+            </ul>
+          </div>
         </>
       )}
     </div>
   );
 };
+
+
 
 const App: React.FC = () => {
   const [selectedNode, setSelectedNode] = useState<Parent | null>(null);
@@ -249,13 +298,34 @@ const App: React.FC = () => {
   ];
 
   return (
-    <div style={{ display: "flex", fontSize: '20px' }}>
+    <>
+    
+        <Typography
+          marginBottom={2}
+          variant="h6"
+          sx={{
+            position: 'sticky',
+            marginTop: '40px',
+            top: '0',
+            zIndex: '1',
+            fontSize: '24px',
+            fontWeight: 'bold',
+            color: '#2e3b55',
+            textAlign: 'center',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)',
+          }}
+        >
+          Информация о сервисах
+        </Typography>
+    <div style={{ display: "flex", fontSize: '20px', marginTop: '20px' }}>
       <div>
-        <h2>Родительские элементы:</h2>
         <TreeView data={data} onSelect={handleNodeSelect} />
       </div>
       {selectedNode && <RightPanel selectedNode={selectedNode} />}
     </div>
+          </>
   );
 };
 
